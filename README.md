@@ -17,7 +17,7 @@ A full-stack application that allows users to upload CV files, analyzes them usi
 - **Storage**: AWS S3 for file storage
 - **AI**: OpenAI GPT-3.5-turbo for CV analysis
 - **Jobs**: Redis + BullMQ for background processing
-- **Real-time**: Socket.IO for WebSocket connections
+- **Real-time**: Socket.IO for WebSocket connections (to be added)
 
 ## Setup
 
@@ -48,7 +48,7 @@ A full-stack application that allows users to upload CV files, analyzes them usi
    ```
 
 3. **Set up environment variables**
-   create `.env` file and add content as describe below.
+   create `.env` file and add content as described below.
 
 4. **Database setup**
 
@@ -58,8 +58,14 @@ A full-stack application that allows users to upload CV files, analyzes them usi
    ```
 
 5. **Start development server**
+
    ```bash
    pnpm dev
+   ```
+
+6. **Start background workers** (in a separate terminal)
+   ```bash
+   pnpm workers
    ```
 
 Open [http://localhost:3000](http://localhost:3000) to view the application.
@@ -74,10 +80,7 @@ DATABASE_URL="postgresql://username:password@localhost:5432/cvehak"
 
 # NextAuth
 AUTH_SECRET="your-random-secret-key"
-
-# Google OAuth
-GOOGLE_CLIENT_ID="your-google-client-id"
-GOOGLE_CLIENT_SECRET="your-google-client-secret"
+AUTH_URL="http://localhost:3000"
 
 # AWS S3
 AWS_ACCESS_KEY_ID="your-aws-access-key"
@@ -100,21 +103,6 @@ MAX_FILE_SIZE_MB="10"  # Maximum file size in MB (default: 10)
 # MAX_FILE_SIZE_MB="25"
 ```
 
-## S3 Bucket Configuration
-
-Configure your S3 bucket with the following CORS settings:
-
-```json
-[
-  {
-    "AllowedHeaders": ["*"],
-    "AllowedMethods": ["GET", "POST", "PUT"],
-    "AllowedOrigins": ["http://localhost:3000"],
-    "ExposeHeaders": ["ETag"]
-  }
-]
-```
-
 ## API Endpoints
 
 - `POST /api/cv` - Upload CV and trigger analysis
@@ -122,34 +110,3 @@ Configure your S3 bucket with the following CORS settings:
 - `GET /api/cv/[id]` - Get individual CV details
 - `DELETE /api/cv/[id]` - Delete CV and associated data
 - `GET /api/dashboard` - Get dashboard statistics and recent activity
-- `GET /api/config` - Get client configuration (file limits, etc.)
-- `GET /api/auth/[...nextauth]` - Authentication endpoints
-
-## Scripts
-
-```bash
-pnpm dev          # Start development server
-pnpm workers      # Start background workers
-pnpm build        # Build for production
-pnpm start        # Start production server
-pnpm lint         # Run ESLint
-```
-
-## Project Structure
-
-```
-src/
-├── app/
-│   ├── api/             # API routes
-│   │   ├── cv/          # CV upload and management
-│   │   ├── dashboard/   # Dashboard data
-│   │   └── config/      # Client configuration
-│   └── auth/            # Authentication pages
-├── components/          # React components
-├── lib/                 # Utilities and configurations
-├── services/            # External service integrations
-├── workers/             # Background job workers
-└── providers/           # Context providers
-```
-
----
