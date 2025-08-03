@@ -1,5 +1,3 @@
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,13 +18,6 @@ import {
 } from "lucide-react";
 
 export default async function Home() {
-  const session = await auth();
-
-  // Redirect authenticated users to upload page
-  if (session?.user) {
-    redirect("/upload");
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* Hero Section */}
