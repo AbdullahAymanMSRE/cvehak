@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import s3Service from "@/services/s3";
 import { addCVProcessingJob } from "@/lib/queue";
+import { revalidatePath } from "next/cache";
 
 export async function POST(request: NextRequest) {
   try {
@@ -49,6 +50,8 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    revalidatePath("/upload");
+
     // Add background processing job
     await addCVProcessingJob({
       cvId: cv.id,
@@ -85,87 +88,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("CV upload error:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
-  }
-}
-
-// Get user's CVs
-export async function GET(request: NextRequest) {
-  try {
-    // Check authentication
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const userId = session.user.id;
-
-    // Get query parameters for pagination
-    const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get("page") || "1");
-    const limit = parseInt(searchParams.get("limit") || "10");
-    const skip = (page - 1) * limit;
-
-    // Fetch user's CVs with analysis data
-    const [cvs, total] = await Promise.all([
-      prisma.cV.findMany({
-        where: { userId },
-        include: {
-          analysis: true,
-        },
-        orderBy: { uploadedAt: "desc" },
-        skip,
-        take: limit,
-      }),
-      prisma.cV.count({
-        where: { userId },
-      }),
-    ]);
-
-    // Format response
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const formattedCVs = cvs.map((cv: any) => ({
-      id: cv.id,
-      filename: cv.originalName,
-      downloadUrl: s3Service.generatePublicUrl(cv.fileUrl),
-      size: cv.fileSize,
-      status: cv.status,
-      uploadedAt: cv.uploadedAt,
-      processedAt: cv.processedAt,
-      analysis: cv.analysis
-        ? {
-            experienceScore: cv.analysis.experienceScore,
-            educationScore: cv.analysis.educationScore,
-            skillsScore: cv.analysis.skillsScore,
-            overallScore: cv.analysis.overallScore,
-            experienceAnalysis: cv.analysis.experienceAnalysis,
-            educationAnalysis: cv.analysis.educationAnalysis,
-            skillsAnalysis: cv.analysis.skillsAnalysis,
-            overallFeedback: cv.analysis.overallFeedback,
-            yearsOfExperience: cv.analysis.yearsOfExperience,
-            educationLevel: cv.analysis.educationLevel,
-            keySkills: cv.analysis.keySkills,
-            jobTitles: cv.analysis.jobTitles,
-            companies: cv.analysis.companies,
-          }
-        : null,
-    }));
-
-    return NextResponse.json({
-      success: true,
-      cvs: formattedCVs,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
-      },
-    });
-  } catch (error) {
-    console.error("CV fetch error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

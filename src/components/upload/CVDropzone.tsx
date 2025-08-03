@@ -11,7 +11,10 @@ interface CVDropzoneProps {
   disabled?: boolean;
 }
 
-function CVDropzone({ onFilesSelected, disabled = false }: CVDropzoneProps) {
+export function CvDropzone({
+  onFilesSelected,
+  disabled = false,
+}: CVDropzoneProps) {
   const [, setDragCounter] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -174,5 +177,3 @@ function CVDropzone({ onFilesSelected, disabled = false }: CVDropzoneProps) {
     </div>
   );
 }
-
-export default CVDropzone;

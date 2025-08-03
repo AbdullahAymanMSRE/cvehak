@@ -106,7 +106,5 @@ MAX_FILE_SIZE_MB="10"  # Maximum file size in MB (default: 10)
 ## API Endpoints
 
 - `POST /api/cv` - Upload CV and trigger analysis
-- `GET /api/cv` - Get user's CVs with pagination
-- `GET /api/cv/[id]` - Get individual CV details
 - `DELETE /api/cv/[id]` - Delete CV and associated data
 - `GET /api/dashboard` - Get dashboard statistics and recent activity

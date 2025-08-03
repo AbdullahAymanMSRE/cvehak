@@ -1,17 +1,19 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import CVUploadPage from "@/components/upload/CVUploadPage";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CVUploadHistory } from "@/components/upload";
-import { AlertCircle, CheckCircle } from "lucide-react";
+import { getCvs } from "./actions";
+import { CvUploadPage } from "@/components/upload/cvUploadPage";
+import { UploadTips } from "@/components/upload/uploadTips";
+import { CvUploadHistory } from "@/components/upload/cvUploadHistory";
 
 export default async function UploadPage() {
   const session = await auth();
 
   // Redirect unauthenticated users to signin
-  if (!session?.user) {
+  if (!session?.user?.id) {
     redirect("/auth/signin");
   }
+
+  const cvs = await getCvs();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
@@ -27,43 +29,11 @@ export default async function UploadPage() {
           </p>
         </div>
 
-        <CVUploadPage />
+        <CvUploadPage />
 
-        {/* Upload Tips */}
-        <Card className="border-0 shadow-lg mb-8">
-          <CardHeader>
-            <CardTitle className="text-lg">Upload Tips</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid md:grid-cols-2 gap-6 text-sm">
-              <div>
-                <h4 className="font-medium mb-2 flex items-center">
-                  <CheckCircle className="w-4 h-4 mr-2 text-green-600" />
-                  Supported Formats
-                </h4>
-                <ul className="text-gray-600 space-y-1">
-                  <li>• PDF files only</li>
-                  <li>• Maximum 10MB per file</li>
-                  <li>• Text-based PDFs (not scanned images)</li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-medium mb-2 flex items-center">
-                  <AlertCircle className="w-4 h-4 mr-2 text-blue-600" />
-                  Best Practices
-                </h4>
-                <ul className="text-gray-600 space-y-1">
-                  <li>• Use standard CV formatting</li>
-                  <li>• Include clear section headers</li>
-                  <li>• Ensure text is selectable</li>
-                </ul>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <UploadTips />
 
-        {/* Recent Uploads */}
-        <CVUploadHistory />
+        <CvUploadHistory initialCvs={cvs} />
       </div>
     </div>
   );

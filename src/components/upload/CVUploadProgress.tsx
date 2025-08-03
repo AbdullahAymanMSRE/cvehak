@@ -6,7 +6,7 @@ import { CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import { formatFileSize, getStatusLabel } from "@/lib/upload";
 import { UploadItem } from "@/types/cv";
 
-function CVUploadProgress({
+export function CvUploadProgress({
   uploads,
 }: {
   uploads: { [key: string]: UploadItem };
@@ -104,5 +104,3 @@ function CVUploadProgress({
     </div>
   );
 }
-
-export default CVUploadProgress;

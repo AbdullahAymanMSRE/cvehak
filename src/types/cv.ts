@@ -4,14 +4,14 @@ export interface CV {
   downloadUrl: string;
   size: number;
   status: string;
-  uploadedAt: string;
-  processedAt?: string;
-  analysis?: {
+  uploadedAt: Date;
+  processedAt: Date | null;
+  analysis: {
     experienceScore: number;
     educationScore: number;
     skillsScore: number;
     overallScore: number;
-  };
+  } | null;
 }
 
 export interface UploadItem {

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import s3Service from "@/services/s3";
+import { revalidatePath } from "next/cache";
 
 // Get individual CV details
 export async function GET(
@@ -130,6 +131,8 @@ export async function DELETE(
     await prisma.cV.delete({
       where: { id: cvId },
     });
+
+    revalidatePath("/upload");
 
     return NextResponse.json({
       success: true,

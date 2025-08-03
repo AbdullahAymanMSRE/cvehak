@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -9,94 +8,42 @@ import {
   Eye,
   Clock,
   TrendingUp,
-  RefreshCw,
   Download,
 } from "lucide-react";
 import { formatFileSize, getStatusLabel } from "@/lib/upload";
 import { CV } from "@/types/cv";
 import Link from "next/link";
+import { getCvs } from "@/app/upload/actions";
+import { useQuery } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
-function CVUploadHistory() {
-  const [cvs, setCvs] = useState<CV[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchCVs = async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
-
-      const response = await fetch("/api/cv?limit=5");
-      const data = await response.json();
-
-      if (data.success) {
-        setCvs(data.cvs);
-      } else {
-        setError("Failed to load CVs");
-      }
-    } catch (err) {
-      setError("Failed to load CVs");
-      console.error("Error fetching CVs:", err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchCVs();
-  }, []);
+export function CvUploadHistory({ initialCvs }: { initialCvs: CV[] }) {
+  const { data: cvs } = useQuery({
+    queryKey: ["cvs"],
+    queryFn: getCvs,
+    initialData: initialCvs,
+  });
+  const queryClient = useQueryClient();
 
   const handleDelete = async (cvId: string) => {
     if (!confirm("Are you sure you want to delete this CV?")) return;
 
     try {
-      const response = await fetch(`/api/cv/${cvId}`, {
+      await fetch(`/api/cv/${cvId}`, {
         method: "DELETE",
       });
-
-      if (response.ok) {
-        setCvs((prev) => prev.filter((cv) => cv.id !== cvId));
-      } else {
-        alert("Failed to delete CV");
-      }
+      queryClient.invalidateQueries({ queryKey: ["cvs"] });
     } catch (err) {
       alert("Failed to delete CV");
       console.error("Error deleting CV:", err);
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="text-center py-8">
-        <RefreshCw className="w-8 h-8 mx-auto mb-4 animate-spin text-gray-400" />
-        <p className="text-gray-500">Loading your CVs...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="text-center py-8">
-        <div className="text-red-600 mb-4">
-          <p>{error}</p>
-        </div>
-        <Button variant="outline" onClick={fetchCVs}>
-          <RefreshCw className="w-4 h-4 mr-2" />
-          Try Again
-        </Button>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-medium">Recent CVs ({cvs.length})</h3>
-        <Button variant="outline" size="sm" onClick={fetchCVs}>
-          <RefreshCw className="w-4 h-4 mr-2" />
-          Refresh
-        </Button>
       </div>
 
       {/* CV List */}
@@ -211,5 +158,3 @@ function CVUploadHistory() {
     </div>
   );
 }
-
-export default CVUploadHistory;

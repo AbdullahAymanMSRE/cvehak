@@ -11,13 +11,17 @@ import {
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { FileText, Upload, CheckCircle } from "lucide-react";
-import { CVDropzone, CVUploadProgress } from "@/components/upload";
+import { CvDropzone } from "@/components/upload/cvDropzone";
+import { CvUploadProgress } from "@/components/upload/cvUploadProgress";
 import { uploadCV, validateCV } from "@/lib/upload";
 import uuid4 from "uuid4";
 import { UploadItem } from "@/types/cv";
+import { useQueryClient } from "@tanstack/react-query";
 
-export default function CVUploadPage() {
+export function CvUploadPage() {
   const [uploads, setUploads] = useState<{ [key: string]: UploadItem }>({});
+
+  const queryClient = useQueryClient();
 
   const handleFilesSelected = useCallback(async (files: File[]) => {
     const newUploads = files.reduce((acc, file) => {
@@ -57,6 +61,7 @@ export default function CVUploadPage() {
             return newState;
           });
         });
+        queryClient.invalidateQueries({ queryKey: ["cvs"] });
 
         // Update upload status
         setUploads((prev) => {
@@ -116,7 +121,7 @@ export default function CVUploadPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <CVDropzone
+            <CvDropzone
               onFilesSelected={handleFilesSelected}
               disabled={hasActiveUploads}
             />
@@ -154,7 +159,7 @@ export default function CVUploadPage() {
                 <p className="text-sm">Your upload progress will appear here</p>
               </div>
             ) : (
-              <CVUploadProgress uploads={uploads} />
+              <CvUploadProgress uploads={uploads} />
             )}
           </CardContent>
         </Card>
