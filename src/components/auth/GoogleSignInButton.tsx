@@ -20,6 +20,7 @@ export function GoogleSignInButton({
     try {
       await signIn("google", { callbackUrl: "/" });
     } catch (error) {
+      console.error(error);
       onError("Failed to sign in with Google");
       onLoadingChange(false);
     }

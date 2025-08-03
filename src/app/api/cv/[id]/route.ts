@@ -6,7 +6,7 @@ import s3Service from "@/services/s3";
 // Get individual CV details
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check authentication
@@ -16,7 +16,7 @@ export async function GET(
     }
 
     const userId = session.user.id;
-    const cvId = params.id;
+    const cvId = (await params).id;
 
     // Fetch CV with analysis data
     const cv = await prisma.cV.findFirst({
@@ -92,7 +92,7 @@ export async function GET(
 // Delete CV
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check authentication
@@ -102,7 +102,7 @@ export async function DELETE(
     }
 
     const userId = session.user.id;
-    const cvId = params.id;
+    const cvId = (await params).id;
 
     // Find CV and ensure user owns it
     const cv = await prisma.cV.findFirst({

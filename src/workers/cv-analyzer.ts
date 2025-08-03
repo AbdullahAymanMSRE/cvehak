@@ -101,6 +101,7 @@ export const cvAnalysisWorker = new Worker<CVAnalysisJobData>(
       try {
         analysisData = JSON.parse(aiResponse);
       } catch (parseError) {
+        console.error(parseError);
         console.error("Failed to parse AI response:", aiResponse);
         throw new Error("Invalid JSON response from AI");
       }
@@ -201,6 +202,7 @@ export const cvAnalysisWorker = new Worker<CVAnalysisJobData>(
 );
 
 // Worker event handlers
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 cvAnalysisWorker.on("completed", (job: Job, result: any) => {
   console.log(`✅ CV analysis worker completed job ${job.id}:`, result);
 });

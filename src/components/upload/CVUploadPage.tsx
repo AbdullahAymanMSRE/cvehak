@@ -88,7 +88,7 @@ export default function CVUploadPage() {
   const handleClearCompleted = () => {
     setUploads((prev) =>
       Object.fromEntries(
-        Object.entries(prev).filter(([_, u]) => u.status === "uploading")
+        Object.entries(prev).filter(([, u]) => u.status === "uploading")
       )
     );
   };
