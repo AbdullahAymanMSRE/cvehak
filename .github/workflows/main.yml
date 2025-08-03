@@ -25,3 +25,4 @@ jobs:
             pnpx prisma migrate deploy
             pnpm build
             pm2 restart "cvehak"
+            pm2 restart "cvehak-workers"
