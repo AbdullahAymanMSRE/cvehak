@@ -4,11 +4,6 @@ import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import s3Service from "@/services/s3";
 
-export async function generateStaticParams() {
-  const cvs = await prisma.cV.findMany();
-  return cvs.map((cv) => ({ cv: cv.id }));
-}
-
 export default async function CVPage({
   params,
 }: {
