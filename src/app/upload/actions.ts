@@ -2,9 +2,8 @@
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import s3Service from "@/services/s3";
-import { cache } from "react";
 
-export const getCvs = cache(async () => {
+export const getCvs = async () => {
   const session = await auth();
   if (!session?.user?.id) {
     return [];
@@ -33,4 +32,4 @@ export const getCvs = cache(async () => {
   }));
 
   return formattedCVs;
-});
+};
