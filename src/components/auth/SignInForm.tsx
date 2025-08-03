@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
-import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
+// import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 import { FormField } from "@/components/auth/FormField";
 import { signInSchema, type SignInInput } from "@/lib/validations";
 
@@ -38,7 +38,7 @@ export function SignInForm() {
         setError("Invalid email or password");
       } else {
         // Use window.location.href for proper session refresh
-        window.location.href = "/";
+        window.location.href = "/dashboard";
       }
     } catch {
       setError("An error occurred. Please try again.");
@@ -88,11 +88,11 @@ export function SignInForm() {
         </Button>
       </form>
 
-      <GoogleSignInButton
+      {/* <GoogleSignInButton
         isLoading={isLoading}
         onLoadingChange={setIsLoading}
         onError={setError}
-      />
+      /> */}
     </>
   );
 }

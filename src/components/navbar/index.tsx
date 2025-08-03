@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,14 +8,15 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { FileText, LogOut, User, Upload, Menu } from "lucide-react";
-import { useSession, signOut } from "next-auth/react";
+import { auth, signOut } from "@/auth";
 
-export function Navbar() {
-  const { data: session, status } = useSession();
+async function handleSignOut() {
+  "use server";
+  await signOut({ redirectTo: "/" });
+}
 
-  const handleSignOut = async () => {
-    await signOut({ callbackUrl: "/" });
-  };
+export async function Navbar() {
+  const session = await auth();
 
   return (
     <nav className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
@@ -34,9 +33,7 @@ export function Navbar() {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-4">
-          {status === "loading" ? (
-            <div className="w-8 h-8 animate-pulse bg-gray-200 rounded-full" />
-          ) : session ? (
+          {session ? (
             // Authenticated user navigation
             <>
               <Link href="/upload">
@@ -68,15 +65,17 @@ export function Navbar() {
                   </span>
                 </div>
 
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleSignOut}
-                  className="flex items-center space-x-2 text-gray-600 hover:text-red-600"
-                >
-                  <LogOut className="w-4 h-4" />
-                  <span>Sign Out</span>
-                </Button>
+                <form action={handleSignOut}>
+                  <Button
+                    type="submit"
+                    variant="ghost"
+                    size="sm"
+                    className="flex items-center space-x-2 text-gray-600 hover:text-red-600"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span>Sign Out</span>
+                  </Button>
+                </form>
               </div>
             </>
           ) : (
@@ -108,9 +107,7 @@ export function Navbar() {
               </SheetHeader>
 
               <div className="mt-6 space-y-4">
-                {status === "loading" ? (
-                  <div className="w-8 h-8 animate-pulse bg-gray-200 rounded-full mx-auto" />
-                ) : session ? (
+                {session ? (
                   // Authenticated mobile menu
                   <>
                     <Link href="/upload">
@@ -145,14 +142,16 @@ export function Navbar() {
                         </div>
                       </div>
 
-                      <Button
-                        variant="ghost"
-                        onClick={handleSignOut}
-                        className="w-full justify-start space-x-3 h-12 text-gray-600 hover:text-red-600"
-                      >
-                        <LogOut className="w-5 h-5" />
-                        <span>Sign Out</span>
-                      </Button>
+                      <form action={handleSignOut}>
+                        <Button
+                          type="submit"
+                          variant="ghost"
+                          className="w-full justify-start space-x-3 h-12 text-gray-600 hover:text-red-600"
+                        >
+                          <LogOut className="w-5 h-5" />
+                          <span>Sign Out</span>
+                        </Button>
+                      </form>
                     </div>
                   </>
                 ) : (

@@ -10,9 +10,11 @@ import {
   Clock,
   TrendingUp,
   RefreshCw,
+  Download,
 } from "lucide-react";
 import { formatFileSize, getStatusLabel } from "@/lib/upload";
 import { CV } from "@/types/cv";
+import Link from "next/link";
 
 function CVUploadHistory() {
   const [cvs, setCvs] = useState<CV[]>([]);
@@ -63,11 +65,6 @@ function CVUploadHistory() {
     }
   };
 
-  const handleView = (cvId: string) => {
-    // This would open a detailed view - for now just show an alert
-    alert(`View CV details for ID: ${cvId}`);
-  };
-
   if (isLoading) {
     return (
       <div className="text-center py-8">
@@ -91,16 +88,6 @@ function CVUploadHistory() {
     );
   }
 
-  if (cvs.length === 0) {
-    return (
-      <div className="text-center py-8 text-gray-500">
-        <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
-        <p>No CVs uploaded yet</p>
-        <p className="text-sm">Your uploaded CVs will appear here</p>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-4">
       {/* Header */}
@@ -113,24 +100,25 @@ function CVUploadHistory() {
       </div>
 
       {/* CV List */}
-      <div className="space-y-3">
-        {cvs.map((cv) => (
-          <div key={cv.id} className="border rounded-lg p-4">
-            <div className="flex items-start justify-between">
-              {/* CV Info */}
-              <div className="flex items-start space-x-3 min-w-0 flex-1">
-                <div className="flex-shrink-0 mt-1">
-                  <FileText className="w-5 h-5 text-gray-600" />
-                </div>
+      {cvs.length > 0 ? (
+        <div className="space-y-3">
+          {cvs.map((cv) => (
+            <div key={cv.id} className="border rounded-lg p-4">
+              <div className="flex items-start justify-between">
+                {/* CV Info */}
+                <div className="flex items-start space-x-3 min-w-0 flex-1">
+                  <div className="flex-shrink-0 mt-1">
+                    <FileText className="w-5 h-5 text-gray-600" />
+                  </div>
 
-                <div className="min-w-0 flex-1 space-y-1">
-                  <div className="flex items-center space-x-2">
-                    <p className="text-sm font-medium truncate">
-                      {cv.filename}
-                    </p>
-                    <Badge
-                      variant="secondary"
-                      className={`
+                  <div className="min-w-0 flex-1 space-y-1">
+                    <div className="flex items-center space-x-2">
+                      <p className="text-sm font-medium truncate">
+                        {cv.filename}
+                      </p>
+                      <Badge
+                        variant="secondary"
+                        className={`
                         ${
                           cv.status === "COMPLETED"
                             ? "bg-green-100 text-green-800"
@@ -141,64 +129,78 @@ function CVUploadHistory() {
                             : "bg-gray-100 text-gray-800"
                         }
                       `}
-                    >
-                      {getStatusLabel(cv.status)}
-                    </Badge>
-                  </div>
+                      >
+                        {getStatusLabel(cv.status)}
+                      </Badge>
+                    </div>
 
-                  <div className="flex items-center space-x-4 text-xs text-gray-500">
-                    <span>{formatFileSize(cv.size)}</span>
-                    <span className="flex items-center">
-                      <Clock className="w-3 h-3 mr-1" />
-                      {new Date(cv.uploadedAt).toLocaleDateString()}
-                    </span>
-                    {cv.analysis && (
-                      <span className="flex items-center text-green-600">
-                        <TrendingUp className="w-3 h-3 mr-1" />
-                        {cv.analysis.overallScore}/100
+                    <div className="flex items-center space-x-4 text-xs text-gray-500">
+                      <span>{formatFileSize(cv.size)}</span>
+                      <span className="flex items-center">
+                        <Clock className="w-3 h-3 mr-1" />
+                        {new Date(cv.uploadedAt).toLocaleDateString()}
                       </span>
+                      {cv.analysis && (
+                        <span className="flex items-center text-green-600">
+                          <TrendingUp className="w-3 h-3 mr-1" />
+                          {cv.analysis.overallScore}/100
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Scores */}
+                    {cv.analysis && (
+                      <div className="flex items-center space-x-4 text-xs">
+                        <span className="text-blue-600">
+                          Exp: {cv.analysis.experienceScore}
+                        </span>
+                        <span className="text-purple-600">
+                          Edu: {cv.analysis.educationScore}
+                        </span>
+                        <span className="text-green-600">
+                          Skills: {cv.analysis.skillsScore}
+                        </span>
+                      </div>
                     )}
                   </div>
+                </div>
 
-                  {/* Scores */}
-                  {cv.analysis && (
-                    <div className="flex items-center space-x-4 text-xs">
-                      <span className="text-blue-600">
-                        Exp: {cv.analysis.experienceScore}
-                      </span>
-                      <span className="text-purple-600">
-                        Edu: {cv.analysis.educationScore}
-                      </span>
-                      <span className="text-green-600">
-                        Skills: {cv.analysis.skillsScore}
-                      </span>
-                    </div>
-                  )}
+                {/* Actions */}
+                <div className="flex items-center space-x-2 ml-4">
+                  <Link href={`/dashboard/${cv.id}`}>
+                    <Button variant="ghost" size="sm">
+                      <Eye className="w-4 h-4" />
+                    </Button>
+                  </Link>
+                  <Link href={cv.downloadUrl} target="_blank">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      disabled={cv.status !== "COMPLETED"}
+                      className="h-8 w-8 p-0"
+                    >
+                      <Download className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleDelete(cv.id)}
+                    className="text-red-600 hover:text-red-700"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
                 </div>
               </div>
-
-              {/* Actions */}
-              <div className="flex items-center space-x-2 ml-4">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleView(cv.id)}
-                >
-                  <Eye className="w-4 h-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleDelete(cv.id)}
-                  className="text-red-600 hover:text-red-700"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
-              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-8 text-gray-500">
+          <p>No CVs uploaded yet</p>
+          <p className="text-sm">Your uploaded CVs will appear here</p>
+        </div>
+      )}
 
       {/* View All Link */}
       {cvs.length >= 5 && (

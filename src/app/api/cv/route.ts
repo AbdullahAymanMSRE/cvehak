@@ -130,6 +130,7 @@ export async function GET(request: NextRequest) {
     const formattedCVs = cvs.map((cv: any) => ({
       id: cv.id,
       filename: cv.originalName,
+      downloadUrl: s3Service.generatePublicUrl(cv.fileUrl),
       size: cv.fileSize,
       status: cv.status,
       uploadedAt: cv.uploadedAt,

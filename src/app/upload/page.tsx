@@ -1,13 +1,7 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import CVUploadPage from "@/components/upload/CVUploadPage";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CVUploadHistory } from "@/components/upload";
 import { AlertCircle, CheckCircle } from "lucide-react";
 
@@ -69,17 +63,7 @@ export default async function UploadPage() {
         </Card>
 
         {/* Recent Uploads */}
-        <Card className="border-0 shadow-lg">
-          <CardHeader>
-            <CardTitle>Recent Uploads</CardTitle>
-            <CardDescription>
-              View your previously uploaded CVs and their analysis results
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <CVUploadHistory />
-          </CardContent>
-        </Card>
+        <CVUploadHistory />
       </div>
     </div>
   );

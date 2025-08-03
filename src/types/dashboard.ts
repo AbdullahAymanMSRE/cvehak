@@ -1,3 +1,5 @@
+import { CVStatus } from "@prisma/client";
+
 export interface DashboardStats {
   totalCVs: number;
   avgExperienceScore: number;
@@ -19,16 +21,25 @@ export interface DashboardStats {
 export interface CVDetails {
   id: string;
   filename: string;
+  downloadUrl: string;
   size: number;
-  status: "UPLOADED" | "PROCESSING" | "COMPLETED" | "FAILED";
-  uploadedAt: string;
-  processedAt?: string;
+  status: CVStatus;
+  uploadedAt: Date;
+  processedAt: Date | null;
   analysis?: {
     experienceScore: number;
     educationScore: number;
     skillsScore: number;
     overallScore: number;
-    feedback: string;
+    experienceAnalysis: string | null;
+    educationAnalysis: string | null;
+    skillsAnalysis: string | null;
+    feedback: string | null;
+    yearsOfExperience: number | null;
+    educationLevel: string | null;
+    keySkills: string[] | null;
+    jobTitles: string[] | null;
+    companies: string[] | null;
   };
 }
 

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
+import s3Service from "@/services/s3";
 
 export async function GET() {
   try {
@@ -84,10 +85,10 @@ export async function GET() {
     };
 
     // Format recent CVs
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const formattedCVs = recentCVs.map((cv: any) => ({
+    const formattedCVs = recentCVs.map((cv) => ({
       id: cv.id,
       filename: cv.originalName,
+      downloadUrl: s3Service.generatePublicUrl(cv.fileUrl),
       size: cv.fileSize,
       status: cv.status,
       uploadedAt: cv.uploadedAt,
@@ -122,8 +123,7 @@ export async function GET() {
     const activityByDate = last7Days
       .map((date) => {
         const count = recentCVs.filter(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (cv: any) => cv.uploadedAt.toISOString().split("T")[0] === date
+          (cv) => cv.uploadedAt.toISOString().split("T")[0] === date
         ).length;
         return { date, count };
       })

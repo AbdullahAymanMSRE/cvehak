@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
-import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
+// import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 import { FormField } from "@/components/auth/FormField";
 import { signUpAction } from "@/lib/actions";
 import { signUpSchema, type SignUpInput } from "@/lib/validations";
@@ -34,7 +34,7 @@ export function SignUpForm() {
       if (!result.success) {
         setError(result.error || "Something went wrong");
       } else {
-        router.push("/");
+        router.push("/dashboard");
       }
     } catch (error) {
       console.error("Signup error:", error);
@@ -104,11 +104,11 @@ export function SignUpForm() {
         </Button>
       </form>
 
-      <GoogleSignInButton
+      {/* <GoogleSignInButton
         isLoading={isLoading}
         onLoadingChange={setIsLoading}
         onError={setError}
-      />
+      /> */}
     </>
   );
 }

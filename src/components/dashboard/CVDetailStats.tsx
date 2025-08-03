@@ -1,5 +1,3 @@
-"use client";
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -14,12 +12,9 @@ import {
 } from "lucide-react";
 import { CVDetails } from "@/types/dashboard";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
-interface CVDetailStatsProps {
-  cv: CVDetails;
-}
-
-export default function CVDetailStats({ cv }: CVDetailStatsProps) {
+export default function CVDetailStats({ cv }: { cv: CVDetails }) {
   const getScoreVariant = (
     score: number
   ): "default" | "secondary" | "destructive" | "outline" => {
@@ -34,22 +29,6 @@ export default function CVDetailStats({ cv }: CVDetailStatsProps) {
     if (score >= 60) return "Good";
     if (score >= 40) return "Fair";
     return "Poor";
-  };
-
-  const handleViewCV = async () => {
-    try {
-      const response = await fetch(`/api/cv/${cv.id}`);
-      const data = await response.json();
-
-      if (data.success && data.downloadUrl) {
-        window.open(data.downloadUrl, "_blank");
-      } else {
-        alert("Failed to get CV download link");
-      }
-    } catch (error) {
-      console.error("Error getting CV:", error);
-      alert("Failed to open CV");
-    }
   };
 
   if (!cv.analysis) {
@@ -87,15 +66,16 @@ export default function CVDetailStats({ cv }: CVDetailStatsProps) {
               <span className="truncate">{cv.filename}</span>
             </CardTitle>
             <div className="flex items-center space-x-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleViewCV}
-                disabled={cv.status !== "COMPLETED"}
-              >
-                <Eye className="h-4 w-4 mr-2" />
-                View CV
-              </Button>
+              <Link href={cv.downloadUrl} target="_blank">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={cv.status !== "COMPLETED"}
+                >
+                  <Eye className="h-4 w-4 mr-2" />
+                  View CV
+                </Button>
+              </Link>
             </div>
           </div>
         </CardHeader>

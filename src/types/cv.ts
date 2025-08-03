@@ -1,6 +1,7 @@
 export interface CV {
   id: string;
   filename: string;
+  downloadUrl: string;
   size: number;
   status: string;
   uploadedAt: string;

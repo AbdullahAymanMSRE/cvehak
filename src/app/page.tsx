@@ -214,7 +214,7 @@ export default async function Home() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-white text-white hover:bg-white hover:text-blue-600"
+                  className="border-white bg-transparent text-white hover:bg-white hover:text-blue-600"
                 >
                   Sign In
                 </Button>

@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import { CVDetails } from "@/types/dashboard";
 import { formatFileSize } from "@/lib/upload";
+import Link from "next/link";
 
 export default function CVTable({ cvs }: { cvs: CVDetails[] }) {
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -89,29 +90,20 @@ export default function CVTable({ cvs }: { cvs: CVDetails[] }) {
     }
   };
 
-  const handleView = async (id: string) => {
-    try {
-      const response = await fetch(`/api/cv/${id}`);
-      const data = await response.json();
-
-      if (data.success && data.downloadUrl) {
-        window.open(data.downloadUrl, "_blank");
-      } else {
-        alert("Failed to get CV download link");
-      }
-    } catch (error) {
-      console.error("Error getting CV:", error);
-      alert("Failed to open CV");
-    }
-  };
-
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Your CVs</CardTitle>
-        <CardDescription>
-          Manage and view analysis results for your uploaded CVs
-        </CardDescription>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle>Your CVs</CardTitle>
+            <CardDescription>
+              Manage and view analysis results for your uploaded CVs
+            </CardDescription>
+          </div>
+          <Button asChild>
+            <Link href="/upload">Add CV</Link>
+          </Button>
+        </div>
       </CardHeader>
       <CardContent>
         <div className="rounded-md border overflow-hidden">
@@ -198,24 +190,26 @@ export default function CVTable({ cvs }: { cvs: CVDetails[] }) {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end space-x-1">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleView(cv.id)}
-                            disabled={cv.status !== "COMPLETED"}
-                            className="h-8 w-8 p-0"
-                          >
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleView(cv.id)}
-                            disabled={cv.status !== "COMPLETED"}
-                            className="h-8 w-8 p-0"
-                          >
-                            <Download className="h-4 w-4" />
-                          </Button>
+                          <Link href={`/dashboard/${cv.id}`}>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              disabled={cv.status !== "COMPLETED"}
+                              className="h-8 w-8 p-0"
+                            >
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                          </Link>
+                          <Link href={cv.downloadUrl} target="_blank">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              disabled={cv.status !== "COMPLETED"}
+                              className="h-8 w-8 p-0"
+                            >
+                              <Download className="h-4 w-4" />
+                            </Button>
+                          </Link>
                           <Button
                             variant="ghost"
                             size="sm"
