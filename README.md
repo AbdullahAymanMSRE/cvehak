@@ -35,7 +35,7 @@ A full-stack application that allows users to upload CV files, analyzes them usi
 1. **Clone and install dependencies**
 
    ```bash
-   git clone <repo-url>
+   git clone https://github.com/AbdullahAymanMSRE/cvehak.git
    cd cvehak
    pnpm install
    ```
