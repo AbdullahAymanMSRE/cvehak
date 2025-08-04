@@ -18,7 +18,7 @@ interface CVFilterProps {
   selectedCv: CVDetails | null;
 }
 
-export default function CVFilter({ cvs, selectedCv }: CVFilterProps) {
+export function CvFilter({ cvs, selectedCv }: CVFilterProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
 

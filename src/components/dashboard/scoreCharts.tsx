@@ -29,7 +29,7 @@ interface ScoreChartsProps {
   stats: DashboardStats;
 }
 
-export default function ScoreCharts({ stats }: ScoreChartsProps) {
+export function ScoreCharts({ stats }: ScoreChartsProps) {
   const scoreData = [
     {
       category: "Experience",

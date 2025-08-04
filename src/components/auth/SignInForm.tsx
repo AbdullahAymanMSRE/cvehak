@@ -7,9 +7,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
-// import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
-import { FormField } from "@/components/auth/FormField";
 import { signInSchema, type SignInInput } from "@/lib/validations";
+import { FormField } from "./formField";
 
 export function SignInForm() {
   const [error, setError] = useState("");

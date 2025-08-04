@@ -31,7 +31,7 @@ import { CVDetails } from "@/types/dashboard";
 import { formatFileSize } from "@/lib/upload";
 import Link from "next/link";
 
-export default function CVTable({ cvs }: { cvs: CVDetails[] }) {
+export function CvTable({ cvs }: { cvs: CVDetails[] }) {
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const getStatusIcon = (status: string) => {

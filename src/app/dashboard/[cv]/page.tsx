@@ -1,8 +1,8 @@
-import { CVDetailStats } from "@/components/dashboard";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import s3Service from "@/services/s3";
+import { CvDetailStats } from "@/components/dashboard/cvDetailStats";
 
 export default async function CVPage({
   params,
@@ -59,5 +59,5 @@ export default async function CVPage({
       : undefined,
   };
 
-  return <CVDetailStats cv={cvData} />;
+  return <CvDetailStats cv={cvData} />;
 }

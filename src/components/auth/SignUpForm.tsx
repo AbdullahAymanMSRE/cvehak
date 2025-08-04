@@ -7,8 +7,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
-// import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
-import { FormField } from "@/components/auth/FormField";
+// import { GoogleSignInButton } from "@/components/auth/googleSignInButton";
+import { FormField } from "@/components/auth/formField";
 import { signUpAction } from "@/lib/actions";
 import { signUpSchema, type SignUpInput } from "@/lib/validations";
 

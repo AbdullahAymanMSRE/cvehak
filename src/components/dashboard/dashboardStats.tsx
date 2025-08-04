@@ -6,7 +6,7 @@ import { FileText, TrendingUp, Users, Award } from "lucide-react";
 import { DashboardStats as StatsType } from "@/types/dashboard";
 import { cn } from "@/lib/utils";
 
-export default function DashboardStats({ stats }: { stats: StatsType }) {
+export function DashboardStats({ stats }: { stats: StatsType }) {
   const getScoreVariant = (
     score: number
   ): "default" | "secondary" | "destructive" | "outline" => {

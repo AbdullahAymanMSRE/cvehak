@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
-import DashboardStats from "@/components/dashboard/DashboardStats";
-import ScoreCharts from "@/components/dashboard/ScoreCharts";
-import CVTable from "@/components/dashboard/CVTable";
 import { GET as getDashboardData } from "@/app/api/dashboard/route";
+import { DashboardStats } from "@/components/dashboard/dashboardStats";
+import { ScoreCharts } from "@/components/dashboard/scoreCharts";
+import { CvTable } from "@/components/dashboard/cvTable";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -23,7 +23,7 @@ export default async function DashboardPage() {
   return (
     <>
       {/* CV Table */}
-      <CVTable cvs={data.cvs} />
+      <CvTable cvs={data.cvs} />
 
       <h3 className="col-start-1 col-end-auto font-bold text-2xl">
         Overall Analysis

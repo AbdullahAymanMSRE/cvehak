@@ -14,7 +14,7 @@ import { CVDetails } from "@/types/dashboard";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-export default function CVDetailStats({ cv }: { cv: CVDetails }) {
+export function CvDetailStats({ cv }: { cv: CVDetails }) {
   const getScoreVariant = (
     score: number
   ): "default" | "secondary" | "destructive" | "outline" => {

@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { AuthLayout } from "@/components/auth/AuthLayout";
-import { SignUpForm } from "@/components/auth/SignUpForm";
+import { AuthLayout } from "@/components/auth/authLayout";
+import { SignUpForm } from "@/components/auth/signUpForm";
 
 export default function SignUpPage() {
   const footer = (

@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { BackLink } from "@/components/dashboard/BackLink";
+import { BackLink } from "@/components/dashboard/backLink";
 
 export default async function DashboardLayout({
   children,
