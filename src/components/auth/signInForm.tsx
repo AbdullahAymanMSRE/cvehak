@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -88,11 +88,13 @@ export function SignInForm() {
         </Button>
       </form>
 
-      <GoogleSignInButton
-        isLoading={isLoading}
-        onLoadingChange={setIsLoading}
-        onError={setError}
-      />
+      <Suspense fallback={<div>Loading...</div>}>
+        <GoogleSignInButton
+          isLoading={isLoading}
+          onLoadingChange={setIsLoading}
+          onError={setError}
+        />
+      </Suspense>
     </>
   );
 }
