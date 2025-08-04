@@ -9,6 +9,7 @@ import {
   Clock,
   TrendingUp,
   Download,
+  RefreshCcw,
 } from "lucide-react";
 import { formatFileSize, getStatusLabel } from "@/lib/upload";
 import { CV } from "@/types/cv";
@@ -44,6 +45,17 @@ export function CvUploadHistory({ initialCvs }: { initialCvs: CV[] }) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-medium">Recent CVs ({cvs.length})</h3>
+
+        <Button
+          variant="outline"
+          className="flex"
+          onClick={() => {
+            queryClient.invalidateQueries({ queryKey: ["cvs"] });
+          }}
+        >
+          <RefreshCcw className="w-4 h-4 mr-2" />
+          Refresh
+        </Button>
       </div>
 
       {/* CV List */}
