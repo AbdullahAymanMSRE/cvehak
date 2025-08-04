@@ -5,7 +5,7 @@ import { addCVProcessingJob } from "@/lib/queue";
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check authentication
@@ -15,7 +15,7 @@ export async function POST(
     }
 
     const userId = session.user.id;
-    const cvId = params.id;
+    const cvId = (await params).id;
 
     // Verify CV exists and belongs to user
     const cv = await prisma.cV.findFirst({

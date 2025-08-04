@@ -77,6 +77,7 @@ export async function uploadCV(
               });
             }
           } catch (error) {
+            console.error("Error starting processing:", error);
             resolve({
               success: false,
               error: "Failed to start processing after upload",
