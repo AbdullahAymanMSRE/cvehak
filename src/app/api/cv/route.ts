@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import s3Service from "@/services/s3";
-import { addCVProcessingJob } from "@/lib/queue";
-import { revalidatePath } from "next/cache";
 
 export async function POST(request: NextRequest) {
   try {
@@ -50,18 +48,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    revalidatePath("/upload");
-
-    // Add background processing job
-    await addCVProcessingJob({
-      cvId: cv.id,
-      userId,
-      filename: file.name,
-      s3Key,
-      fileSize: file.size,
-    });
-
-    // Log the upload
+    // Log the upload (processing job will be queued after S3 upload completes)
     await prisma.cVProcessingLog.create({
       data: {
         cvId: cv.id,

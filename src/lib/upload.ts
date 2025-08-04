@@ -55,13 +55,33 @@ export async function uploadCV(
         }
       });
 
-      xhr.addEventListener("load", () => {
+      xhr.addEventListener("load", async () => {
         if (xhr.status === 204) {
           // S3 returns 204 on successful upload
-          resolve({
-            success: true,
-            cv,
-          });
+          // Now trigger the processing job
+          try {
+            const processResponse = await fetch(`/api/cv/${cv.id}/process`, {
+              method: "POST",
+            });
+
+            if (processResponse.ok) {
+              resolve({
+                success: true,
+                cv,
+              });
+            } else {
+              const error = await processResponse.json();
+              resolve({
+                success: false,
+                error: error.error || "Failed to start processing",
+              });
+            }
+          } catch (error) {
+            resolve({
+              success: false,
+              error: "Failed to start processing after upload",
+            });
+          }
         } else {
           resolve({
             success: false,

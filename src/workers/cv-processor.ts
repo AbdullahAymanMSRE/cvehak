@@ -20,13 +20,7 @@ export const cvProcessingWorker = new Worker<CVProcessingJobData>(
     try {
       console.log(`🔄 Processing CV: ${cvId} - ${filename}`);
 
-      // Update CV status to PROCESSING
-      await prisma.cV.update({
-        where: { id: cvId },
-        data: { status: "PROCESSING" },
-      });
-
-      // Log processing start
+      // Log processing start (status already set to PROCESSING)
       await prisma.cVProcessingLog.create({
         data: {
           cvId,
