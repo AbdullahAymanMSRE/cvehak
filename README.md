@@ -82,6 +82,10 @@ DATABASE_URL="postgresql://username:password@localhost:5432/cvehak"
 AUTH_SECRET="your-random-secret-key"
 AUTH_URL="http://localhost:3000"
 
+# Google Login
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+
 # AWS S3
 AWS_ACCESS_KEY_ID="your-aws-access-key"
 AWS_SECRET_ACCESS_KEY="your-aws-secret-key"

@@ -18,7 +18,7 @@ export function GoogleSignInButton({
   const handleGoogleSignIn = async () => {
     onLoadingChange(true);
     try {
-      await signIn("google", { callbackUrl: "/" });
+      await signIn("google", { redirectTo: "/dashboard" });
     } catch (error) {
       console.error(error);
       onError("Failed to sign in with Google");

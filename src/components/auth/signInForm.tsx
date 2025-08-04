@@ -9,6 +9,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
 import { signInSchema, type SignInInput } from "@/lib/validations";
 import { FormField } from "./formField";
+import { GoogleSignInButton } from "./googleSignInButton";
 
 export function SignInForm() {
   const [error, setError] = useState("");
@@ -87,11 +88,11 @@ export function SignInForm() {
         </Button>
       </form>
 
-      {/* <GoogleSignInButton
+      <GoogleSignInButton
         isLoading={isLoading}
         onLoadingChange={setIsLoading}
         onError={setError}
-      /> */}
+      />
     </>
   );
 }
