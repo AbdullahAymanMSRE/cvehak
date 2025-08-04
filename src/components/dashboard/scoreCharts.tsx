@@ -24,12 +24,23 @@ import {
   YAxis,
 } from "recharts";
 import { DashboardStats } from "@/types/dashboard";
+import { useQuery } from "@tanstack/react-query";
 
-interface ScoreChartsProps {
-  stats: DashboardStats;
-}
+export function ScoreCharts({
+  initialStats,
+}: {
+  initialStats: DashboardStats;
+}) {
+  const { data: stats } = useQuery<DashboardStats>({
+    queryKey: ["cvs", "stats"],
+    queryFn: async () => {
+      const response = await fetch("/api/dashboard");
+      const data = await response.json();
+      return data.data;
+    },
+    initialData: initialStats,
+  });
 
-export function ScoreCharts({ stats }: ScoreChartsProps) {
   const scoreData = [
     {
       category: "Experience",

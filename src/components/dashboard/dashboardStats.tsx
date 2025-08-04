@@ -5,8 +5,19 @@ import { Badge } from "@/components/ui/badge";
 import { FileText, TrendingUp, Users, Award } from "lucide-react";
 import { DashboardStats as StatsType } from "@/types/dashboard";
 import { cn } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
 
-export function DashboardStats({ stats }: { stats: StatsType }) {
+export function DashboardStats({ initialStats }: { initialStats: StatsType }) {
+  const { data: stats } = useQuery<StatsType>({
+    queryKey: ["cvs", "stats"],
+    queryFn: async () => {
+      const response = await fetch("/api/dashboard");
+      const data = await response.json();
+      return data.data;
+    },
+    initialData: initialStats,
+  });
+
   const getScoreVariant = (
     score: number
   ): "default" | "secondary" | "destructive" | "outline" => {

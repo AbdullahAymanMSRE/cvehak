@@ -30,9 +30,21 @@ import {
 import { CVDetails } from "@/types/dashboard";
 import { formatFileSize } from "@/lib/upload";
 import Link from "next/link";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-export function CvTable({ cvs }: { cvs: CVDetails[] }) {
+export function CvTable({ initialCvs }: { initialCvs: CVDetails[] }) {
   const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const queryClient = useQueryClient();
+  const { data: cvs } = useQuery<CVDetails[]>({
+    queryKey: ["cvs"],
+    queryFn: async () => {
+      const response = await fetch("/api/dashboard");
+      const data = await response.json();
+      return data.cvs;
+    },
+    initialData: initialCvs,
+  });
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -79,6 +91,7 @@ export function CvTable({ cvs }: { cvs: CVDetails[] }) {
       });
 
       if (response.ok) {
+        queryClient.invalidateQueries({ queryKey: ["cvs"] });
       } else {
         alert("Failed to delete CV");
       }

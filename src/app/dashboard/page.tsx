@@ -23,16 +23,16 @@ export default async function DashboardPage() {
   return (
     <>
       {/* CV Table */}
-      <CvTable cvs={data.cvs} />
+      <CvTable initialCvs={data.cvs} />
 
       <h3 className="col-start-1 col-end-auto font-bold text-2xl">
         Overall Analysis
       </h3>
       {/* Stats Cards */}
-      <DashboardStats stats={data.data} />
+      <DashboardStats initialStats={data.data} />
 
       {/* Charts */}
-      <ScoreCharts stats={data.data} />
+      <ScoreCharts initialStats={data.data} />
     </>
   );
 }
