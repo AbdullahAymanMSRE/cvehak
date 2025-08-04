@@ -3,6 +3,7 @@
 import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 interface GoogleSignInButtonProps {
   isLoading: boolean;
@@ -15,10 +16,12 @@ export function GoogleSignInButton({
   onLoadingChange,
   onError,
 }: GoogleSignInButtonProps) {
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
   const handleGoogleSignIn = async () => {
     onLoadingChange(true);
     try {
-      await signIn("google", { redirectTo: "/dashboard" });
+      await signIn("google", { redirectTo: callbackUrl });
     } catch (error) {
       console.error(error);
       onError("Failed to sign in with Google");
